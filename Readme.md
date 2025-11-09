@@ -18,7 +18,7 @@ This work proposes a **deterministic algorithm** and a **deep learning model** f
 
 1. **Deterministic Cutoff Frequency Algorithm**
    - Identifies plateau regions in the **log-MSE–frequency** curve between raw and denoised signals.  
-   - Determines the cutoff frequency as the minimum point of the **inverse gradient** of the log-MSE.
+   - Determines the cutoff frequency based on the minimum point of the inverse gradient of the logarithmic MSE curve.
    - Provides a reproducible and quantitative criterion for noise filtering.
 
 2. **Deep Learning Model for Prediction**
@@ -28,7 +28,7 @@ This work proposes a **deterministic algorithm** and a **deep learning model** f
 
 3. **Automated Post-Processing**
    - Calculates current and charge density from denoised voltage signals.
-   - Extracts \( Q_{\mathrm{charge}} \), \( Q_{\mathrm{res}} \), and \( Q_{\mathrm{discharge}} \) for ferroelectric characterization.
+   - Extracts key charge metrics such as **Q_charge**, **Q_res**, and **Q_discharge** for ferroelectric characterization.
 
 ---
 
@@ -36,18 +36,12 @@ This work proposes a **deterministic algorithm** and a **deep learning model** f
 
 The deterministic algorithm performs the following steps:
 
-1. Apply FFT to convert the raw signal to the frequency domain.  
-2. Compute the MSE between raw and low-pass-filtered signals across candidate frequencies.  
-3. Take the logarithm of MSE and compute its gradient with respect to frequency.  
-4. Invert the gradient to highlight plateau regions:  
-   \[
-   G(f) = \frac{df}{d(\log_{10} \mathrm{MSE}(f))}
-   \]
-5. Identify the frequency \( f_c = \arg\min_f G(f) \) and apply a 15 % margin:
-   \[
-   f_c^{\text{final}} = 1.15 \times f_c
-   \]
-6. Reconstruct the denoised signal via inverse FFT and correct DC offset.
+1. Converts the raw signal into the frequency domain using FFT.  
+2. Computes the mean squared error (MSE) between the original and low-pass filtered signals across candidate frequencies.  
+3. Applies a logarithmic scale to the MSE curve and analyzes its gradient with respect to frequency.  
+4. Inverts the gradient to highlight plateau regions, then identifies the point where this inverted gradient reaches its minimum — corresponding to the optimal cutoff frequency.  
+5. Multiplies the detected cutoff by a small safety margin (15%) to ensure complete noise removal.  
+6. Reconstructs the denoised signal using inverse FFT and applies DC offset correction.
 
 ---
 
@@ -59,12 +53,12 @@ The deterministic algorithm performs the following steps:
 
 - **Input:** Raw voltage signal  
 - **Layers:**  
-  - Three residual 1-D dilated convolution blocks (dilations = 1, 2, 4)  
-  - Bidirectional GRU (hidden dim = 64 × 2)  
-  - Global Avg + Max Pooling  
-  - MLP Regression Head  
-- **Output:** Predicted log-cutoff frequency \( \log_{10}(f_c) \)  
-- **Loss:** Mean-squared error between predicted and algorithm-labeled cutoff frequencies  
+  - Three residual 1-D dilated convolution blocks (dilation rates: 1, 2, and 4)  
+  - Bidirectional GRU layer (hidden size: 64 per direction)  
+  - Global average and max pooling  
+  - Fully connected regression head  
+- **Output:** Predicted logarithmic cutoff frequency  
+- **Loss function:** Mean squared error between predicted and algorithm-labeled cutoff frequencies  
 
 ---
 
@@ -72,9 +66,9 @@ The deterministic algorithm performs the following steps:
 
 - **Device:** Hf₁₋ₓZrₓO₂-based MFM structure  
 - **Samples:** 7,492 raw signals  
-- **Augmentation:** Downsampled (½ and ⅓ points) for robustness  
-- **Total Samples:** 22,476  
-- **Split:** 70 % train | 15 % validation | 15 % test  
+- **Data augmentation:** Downsampled to half and one-third of original resolution  
+- **Total samples:** 22,476  
+- **Split ratio:** 70% training / 15% validation / 15% test  
 
 ---
 
@@ -86,8 +80,8 @@ The deterministic algorithm performs the following steps:
 | Half sampling | 0.059 | 0.0114 | 15.14 % |
 | One-third sampling | 0.063 | 0.0121 | 15.77 % |
 
-- The model accurately reproduces the algorithm’s cutoff estimation.  
-- Maintains performance even with significantly reduced sampling rates.  
-- Enables **automated, consistent**, and **scalable** ferroelectric signal processing.
+- The model reproduces the algorithm’s cutoff estimation with high fidelity.  
+- Maintains accuracy even when the input signals are heavily downsampled.  
+- Enables **automated, consistent, and scalable** ferroelectric signal processing.
 
 ---
