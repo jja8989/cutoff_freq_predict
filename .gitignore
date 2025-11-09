@@ -1,0 +1,45 @@
+# Jupyter notebooks
+*.ipynb
+
+# Figures, plots, temp images
+*.png
+*.jpg
+*.jpeg
+
+# Numpy data files
+*.npz
+*.npy
+*.csv
+
+# Python cache
+__pycache__/
+*.pyc
+
+# System / editor files
+.DS_Store
+.vscode/
+.idea/
+
+# Model checkpoints
+*.pt
+*.pth
+
+# Environment or virtual envs
+.env
+venv/
+/B9
+/checkpoints3
+/processed
+/processed2
+/results_v4
+/results2
+/data
+/figures2
+/NCDialog_v2
+/test_half
+/test_third
+*.pptx
+plot_inference_results.py
+inference.py
+make_dataset.py
+split_dataset.py

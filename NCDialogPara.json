@@ -1,0 +1,7 @@
+{
+    "BiasSign": "Positive biased",
+    "CapacitorArea": "10000",
+    "QresTolerance": "4",
+    "PulseWidth": "500",
+    "PulseRiseFall": "20"
+}
