@@ -5,7 +5,7 @@ This repository contains the implementation and supplementary materials for the 
 
 ---
 
-## 📘 Overview
+## Overview
 
 Ferroelectric (FE) devices such as **FeRAM** and **FeFET** are widely used due to their spontaneous polarization properties.  
 Accurate measurement and noise filtering of FE pulse signals are essential for analyzing intrinsic device characteristics such as remnant polarization, coercive field, and charge density.
@@ -14,12 +14,12 @@ This work proposes a **deterministic algorithm** and a **deep learning model** f
 
 ---
 
-## 🚀 Key Contributions
+## Key Contributions
 
 1. **Deterministic Cutoff Frequency Algorithm**
    - Identifies plateau regions in the **log-MSE–frequency** curve between raw and denoised signals.  
-   - Determines the cutoff frequency based on the minimum point of the inverse gradient of the logarithmic MSE curve.
-   - Provides a reproducible and quantitative criterion for noise filtering.
+   - Determines the cutoff frequency based on the minimum point of the **inverse gradient of the logarithmic MSE curve**.
+   - Provides a **reproducible and quantitative criterion** for noise filtering.
 
 2. **Deep Learning Model for Prediction**
    - A hybrid **1-D dilated CNN + GRU** model that predicts the cutoff frequency directly from raw signals.
@@ -32,37 +32,37 @@ This work proposes a **deterministic algorithm** and a **deep learning model** f
 
 ---
 
-## 🧠 Algorithm Description
+## Algorithm Description
 
 The deterministic algorithm performs the following steps:
 
 1. Converts the raw signal into the frequency domain using FFT.  
 2. Computes the mean squared error (MSE) between the original and low-pass filtered signals across candidate frequencies.  
-3. Applies a logarithmic scale to the MSE curve and analyzes its gradient with respect to frequency.  
-4. Inverts the gradient to highlight plateau regions, then identifies the point where this inverted gradient reaches its minimum — corresponding to the optimal cutoff frequency.  
-5. Multiplies the detected cutoff by a small safety margin (15%) to ensure complete noise removal.  
+3. Applies a logarithmic scale to the MSE curve and analyzes its gradient with respect to log frequency.  
+4. Inverts the gradient to highlight plateau regions, then identifies the point where this inverted gradient reaches its minimum — corresponding to the optimal cutoff frequency.
+5. Multiplies the detected cutoff by a small safety margin (15%).
 6. Reconstructs the denoised signal using inverse FFT and applies DC offset correction.
 
 ---
 
-## 🧩 Deep Learning Architecture
+## Deep Learning Architecture
 
 <p align="center">
-  <img src="figures/model_structure.png" width="80%">
+  <img src="model_structure.png" width="80%">
 </p>
 
 - **Input:** Raw voltage signal  
-- **Layers:**  
+- **Layers:** 
   - Three residual 1-D dilated convolution blocks (dilation rates: 1, 2, and 4)  
   - Bidirectional GRU layer (hidden size: 64 per direction)  
   - Global average and max pooling  
   - Fully connected regression head  
 - **Output:** Predicted logarithmic cutoff frequency  
-- **Loss function:** Mean squared error between predicted and algorithm-labeled cutoff frequencies  
+- **Loss function:** Mean squared error between logs of predicted and algorithm-labeled cutoff frequencies  
 
 ---
 
-## 📊 Dataset
+## Dataset
 
 - **Device:** Hf₁₋ₓZrₓO₂-based MFM structure  
 - **Samples:** 7,492 raw signals  
@@ -72,7 +72,7 @@ The deterministic algorithm performs the following steps:
 
 ---
 
-## ⚙️ Results
+## Results
 
 | Dataset | MAE | MSE | MAPE |
 |----------|-----|-----|------|
