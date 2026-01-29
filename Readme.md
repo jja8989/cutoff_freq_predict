@@ -76,9 +76,9 @@ The deterministic algorithm performs the following steps:
 
 | Dataset              | MAE (log10 Hz) | MSE (log10 Hz) | MAPE (%) |
 |----------------------|---------------|----------------|----------|
-| Test-original            | 0.066         | 0.0107         | 16.46 %  |
-| Test-half        | 0.059         | 0.0095         | 14.55 %  |
-| Test-third   | 0.060         | 0.0093         | 14.25 %  |
+| Test-original            | 0.069         | 0.0128         | 18.37 %  |
+| Test-half        | 0.061         | 0.0106         | 15.64 %  |
+| Test-third   | 0.063         | 0.0122         | 17.38 %  |
 
 - The model reproduces the algorithm’s cutoff estimation with high fidelity.  
 - Maintains accuracy even when the input signals are heavily downsampled.  
